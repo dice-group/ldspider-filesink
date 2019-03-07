@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+
+  ldspider:
+    image: ldspider:latest
+    container_name: ldspider
+    environment:
+      - oe=http://localhost:8890/sparql-auth
+      - user_sparql=dba
+      - passwd_sparql=123pwd
+      - b=1000
+      - s=/var/ldspider/seeds.txt
+    volumes:
+      - ./data/ldspider:/ldspider/data
+      - ./seeds/seeds.txt:/var/ldspider/seeds.txt:ro
+    command: java -jar ldspider-1.3-with-dependencies.jar 
+
+  virtuosohost:
+    image: openlink/virtuoso-opensource-7:latest
+    container_name: virtuosohost
+    ports:
+      - "8890:8890"
+    volumes:
+      - ./data/sparqlhost/sparqlhost_data:/virtuoso
+    environment:
+      - Driver=/usr/local/lib/virtodbc_32.so
+      - DBA_PASSWORD=123pwd
+    

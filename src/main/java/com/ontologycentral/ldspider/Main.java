@@ -111,22 +111,22 @@ public class Main {
 		options.addOption(passwdSparql);
 
 		argsList.add("-s");
-		argsList.add(mapEnv.get("-s"));
+		argsList.add(mapEnv.get("s"));
 		
 //		argsList.add("-o");
 //		argsList.add(mapEnv.get("-o"));
 		
 		argsList.add("-b");
-		argsList.add(mapEnv.get("-b"));
+		argsList.add(mapEnv.get("b"));
 		
 		argsList.add("-oe");
-		argsList.add(mapEnv.get("-oe"));
+		argsList.add(mapEnv.get("oe"));
 		
 		argsList.add("-user_sparql");
-		argsList.add(mapEnv.get("-user_sparql"));
+		argsList.add(mapEnv.get("user_sparql"));
 		
 		argsList.add("-passwd_sparql");
-		argsList.add(mapEnv.get("-passwd_sparql"));
+		argsList.add(mapEnv.get("passwd_sparql"));
 		
 		
 //		Option uri = OptionBuilder.withArgName("uri")
