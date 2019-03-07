@@ -1,7 +1,14 @@
 package com.ontologycentral.ldspider.hooks.sink;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.logging.Logger;
@@ -27,6 +34,9 @@ public class SinkSparul implements Sink {
 
 	/** SPARQL/Update endpoint */
 	private final String _endpoint;
+	
+	private final String user_sparql;
+	private final String passwd_sparql;
 
 	private boolean _includeProvenance;
 
@@ -39,8 +49,10 @@ public class SinkSparul implements Sink {
 	 * @param sparulEndpoint The SPARQL/Update endpoint
 	 * @param includeProvenance If true, provenance information will be included in the output. 
 	 */
-	public SinkSparul(String sparulEndpoint, boolean includeProvenance) {
+	public SinkSparul(String sparulEndpoint, String user,String passwd, boolean includeProvenance) {
 		_endpoint = sparulEndpoint;
+		user_sparql = user;
+		passwd_sparql = passwd;
 		_includeProvenance = includeProvenance;
 		_graphUri = null;
 	}
@@ -53,8 +65,10 @@ public class SinkSparul implements Sink {
 	 * @param includeProvenance If true, provenance information will be included in the output. 
 	 * @param graphUri The graph into which all statements are written
 	 */
-	public SinkSparul(String sparulEndpoint, boolean includeProvenance, String graphUri) {
+	public SinkSparul(String sparulEndpoint,String user,String passwd, boolean includeProvenance, String graphUri) {
 		_endpoint = sparulEndpoint;
+		user_sparql = user;
+		passwd_sparql = passwd;
 		_includeProvenance = includeProvenance;
 		_graphUri = graphUri;
 	}
@@ -122,6 +136,12 @@ public class SinkSparul implements Sink {
 		private void beginSparul(boolean newGraph) throws IOException {
 			//Preconditions
 			if(_connection != null) throw new IllegalStateException("Document already openend");
+			
+			Authenticator.setDefault (new Authenticator() {
+			    protected PasswordAuthentication getPasswordAuthentication() {
+			        return new PasswordAuthentication (user_sparql, passwd_sparql.toCharArray());
+			    }
+			});
 
 			//Open a new HTTP connection
 			URL url = new URL(_endpoint);
