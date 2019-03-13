@@ -6,15 +6,19 @@ services:
     image: ldspider:latest
     container_name: ldspider
     environment:
-      - oe=http://localhost:8890/sparql-auth
+      - oe=http://virtuosohost:8890/sparql-auth
       - user_sparql=dba
       - passwd_sparql=123pwd
       - b=1000
-      - s=/var/ldspider/seeds.txt
+      - s=https://dbpedia.org/resource/China
+      - t=2
+
     volumes:
       - ./data/ldspider:/ldspider/data
       - ./seeds/seeds.txt:/var/ldspider/seeds.txt:ro
-    command: java -jar ldspider-1.3-with-dependencies.jar 
+    command: java -jar ldspider-1.3-with-dependencies.jar
+    ports:
+      - "8080:8080"
 
   virtuosohost:
     image: openlink/virtuoso-opensource-7:latest

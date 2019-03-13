@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -114,7 +116,10 @@ public class Main {
 		argsList.add(mapEnv.get("s"));
 		
 //		argsList.add("-o");
-//		argsList.add(mapEnv.get("-o"));
+//		argsList.add(mapEnv.get("o"));
+		
+		argsList.add("-t");
+		argsList.add(mapEnv.get("t"));
 		
 		argsList.add("-b");
 		argsList.add(mapEnv.get("b"));
@@ -382,7 +387,14 @@ public class Main {
 		// check seed file
 		Iterable<URI> seeds = null;
 //		if (cmd.hasOption("s")) {
-		File seedList = new File(cmd.getOptionValue("s"));
+		String seed = cmd.getOptionValue("s");
+		
+		File seedList = File.createTempFile("temp", String.valueOf(System.currentTimeMillis()));
+		FileWriter writer = new FileWriter(seedList);
+		writer.write(cmd.getOptionValue("s"));
+		writer.close();
+		
+//		File seedList = new File(cmd.getOptionValue("s"));
 		_log.info("reading seeds from " + seedList.getAbsolutePath());
 		if (!seedList.exists()) {
 			throw new FileNotFoundException("No file found at " + seedList.getAbsolutePath());

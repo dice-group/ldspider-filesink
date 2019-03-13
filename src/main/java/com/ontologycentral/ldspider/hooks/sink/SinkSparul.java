@@ -73,6 +73,7 @@ public class SinkSparul implements Sink {
 		_graphUri = graphUri;
 	}
 
+
 	public Callback newDataset(Provenance provenance) {
 		return new CallbackSparul(provenance);
 	}
@@ -136,6 +137,7 @@ public class SinkSparul implements Sink {
 		private void beginSparul(boolean newGraph) throws IOException {
 			//Preconditions
 			if(_connection != null) throw new IllegalStateException("Document already openend");
+			
 			
 			Authenticator.setDefault (new Authenticator() {
 			    protected PasswordAuthentication getPasswordAuthentication() {
@@ -245,7 +247,6 @@ public class SinkSparul implements Sink {
 				}
 			}
 			out.append(" . \n");
-			//output_.append(out.toString());
 			_writer.write(URLEncoder.encode(out.toString(), "UTF-8"));
 		}
 	}
