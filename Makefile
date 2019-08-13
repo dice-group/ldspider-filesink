@@ -2,7 +2,7 @@ default: build
 
 build:
 	mvn clean install -U -DskipTests
-	docker build -f Dockerfile -t dicegroup/ldspider .
+	docker build -f Dockerfile -t dicegroup/ldspider-filesink .
 push-images:
-	docker push dicegroup/ldspider
+	docker push dicegroup/ldspider-filesink
 	

@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -40,6 +41,15 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.http.message.BasicHeader;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.system.StreamRDF;
+import org.apache.jena.riot.system.StreamRDFBase;
+import org.apache.jena.sparql.core.Quad;
+import org.dice_research.ldcbench.sink.SparqlBasedSink;
+import org.dice_research.ldcbench.util.uri.Constants;
+import org.dice_research.ldcbench.util.uri.CrawleableUri;
 import org.semanticweb.yars.nx.Node;
 import org.semanticweb.yars.nx.Resource;
 import org.semanticweb.yars.nx.parser.Callback;
@@ -85,11 +95,14 @@ import com.ontologycentral.ldspider.seen.WrappingCallbackSeen;
 
 public class Main {
     private final static Logger _log = Logger.getLogger(Main.class.getSimpleName());
+    private static String filePath = "";
 
     public static void main(String[] args) throws URISyntaxException {
         Options options = new Options();
 
 //		OptionGroup input = new OptionGroup();
+        
+        
 
         Map<String, String> mapEnv = System.getenv();
 
@@ -122,14 +135,16 @@ public class Main {
         argsList.add("-b");
         argsList.add(mapEnv.get("b"));
 
-        argsList.add("-oe");
-        argsList.add(mapEnv.get("oe"));
+        argsList.add("-o");
+        argsList.add(mapEnv.get("o"));
 
         argsList.add("-user_sparql");
         argsList.add(mapEnv.get("user_sparql"));
 
         argsList.add("-passwd_sparql");
         argsList.add(mapEnv.get("passwd_sparql"));
+        
+        
 
 //		Option uri = OptionBuilder.withArgName("uri")
 //		.hasArgs(1)
@@ -363,8 +378,31 @@ public class Main {
 //				formatter.printHelp(80," ","ERROR: Missing required option: s or u \n", options,"\nError occured! Please see the error message above",true );
 //				System.exit(-1);    
             }
+            
+            SparqlBasedSink sink = SparqlBasedSink.create(mapEnv.get("oe"), cmd.getOptionValue("user_sparql"),
+                    cmd.getOptionValue("passwd_sparql"));
+            
+            sink.deleteTriples();
+
 
             run(cmd);
+            
+            
+          
+            CrawleableUri curi = new CrawleableUri(new URI("http://ldspider.dice-group/" + System.currentTimeMillis()));
+            curi.addData(Constants.UUID_KEY, UUID.randomUUID().toString());
+            sink.openSinkForUri(curi);
+            
+            StreamRDF filtered = new FilterSinkRDF(curi, sink);
+            RDFDataMgr.parse(filtered, filePath, Lang.NQ);
+
+           
+            sink.closeSinkForUri(curi);
+            
+
+            System.err.println("FINISHED");
+            
+            
         } catch (org.apache.commons.cli.ParseException e) {
             formatter.printHelp(80, " ", "ERROR: " + e.getMessage() + "\n", options,
                     "\nError occured! Please see the error message above", true);
@@ -439,8 +477,12 @@ public class Main {
                     cmd.getOptionValue("passwd_sparql"), headerTreatment == Headers.Treatment.INCLUDE);
         } else {
             if (cmd.hasOption("o")) {
-                String path = cmd.getOptionValue("o");
+                File tempFile = File.createTempFile(cmd.getOptionValue("o") + "-", ".tmp");
 
+                String path = cmd.getOptionValue("o");
+                path = tempFile.getAbsolutePath();
+                
+                filePath = path;
                 if (CrawlerConstants.SPLIT_HOPWISE)
                     cbData = new CallbackNxAppender(new HopwiseSplittingFileOutputter(path));
                 else {
@@ -854,6 +896,7 @@ public class Main {
 
         System.err.println("time elapsed " + (time1 - time) + " ms " + (float) eh.lookups() / ((time1 - time) / 1000.0)
                 + " lookups/sec");
+        
     }
 
     static void readFromThisFileIntoThisSeen(String seenfilename, Seen seen) throws FileNotFoundException, IOException {
@@ -975,6 +1018,29 @@ public class Main {
 //		_log.info("read " + i + " proper URIs from seed file");
 //
 //		return seeds;
+    }
+    
+    public static class FilterSinkRDF extends StreamRDFBase{
+        private CrawleableUri  curi;
+        private org.dice_research.ldcbench.sink.Sink sink;
+
+        public FilterSinkRDF(CrawleableUri curi, org.dice_research.ldcbench.sink.Sink sink) {
+            this.curi = curi;
+            this.sink = sink;
+        }
+
+        @Override
+        public void triple(Triple triple) {
+            sink.addTriple(curi, triple);
+//            LOGGER.info("triple found: " + triple.toString());
+        }
+
+        @Override
+        public void quad(Quad quad) {
+            sink.addTriple(curi, quad.asTriple());
+//            LOGGER.info("triple found: " + quad.asTriple().toString());
+        }
+
     }
 
 }
