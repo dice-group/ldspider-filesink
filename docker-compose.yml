@@ -3,19 +3,20 @@ version: "2"
 services:
 
   ldspider:
-    image: ldspider:latest
-    container_name: ldspider
+    image: dicegroup/ldspider-filesink:latest
+    container_name: ldspider-filesink
     environment:
-      - oe=http://virtuosohost:8890/sparql-auth
+      - oe=http://virtuosohost:8890/sparql-auth/
+      - o=tempFile
       - user_sparql=dba
       - passwd_sparql=123pwd
-      - b=1000
-      - s=https://dbpedia.org/resource/China
-      - t=2
+      - b=1
+      - s=https://mcloud.de/export/datasets/BA85C835-F36E-446D-A527-7B41A9E18407
+      - t=8
 
     volumes:
-      - ./data/ldspider:/ldspider/data
-      - ./seeds/seeds.txt:/var/ldspider-filesink/seeds.txt:ro
+      - ./data/ldspider:/var/ldspider/data
+      - ./seeds/seeds.txt:/var/ldspider/seeds.txt:ro
     command: java -jar ldspider-filesink-1.3-with-dependencies.jar
     ports:
       - "8080:8080"

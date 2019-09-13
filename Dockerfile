@@ -1,8 +1,8 @@
 FROM openjdk:8u151-jdk-alpine
 
-COPY ./target/ldspider-1.3-with-dependencies.jar /data/ldspider/ldspider-filesink-1.3-with-dependencies.jar
-WORKDIR /data/ldspider-filesink
+COPY ./target/ldspider-filesink-1.3-with-dependencies.jar /data/ldspider/ldspider-filesink-1.3-with-dependencies.jar
+WORKDIR /data/ldspider
 
-VOLUME ["/var/ldspider-filesink/data"]
+VOLUME ["/var/ldspider/data"]
 
 CMD java -jar ldspider-filesink-1.3-with-dependencies.jar
