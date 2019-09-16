@@ -6,12 +6,12 @@ services:
     image: dicegroup/ldspider-filesink:latest
     container_name: ldspider-filesink
     environment:
-      - oe=http://virtuosohost:8890/sparql-auth/
+      - oe=http://ldsvirtuosohost:8890/sparql-auth/
       - o=tempFile
       - user_sparql=dba
       - passwd_sparql=123pwd
       - b=1
-      - s=https://mcloud.de/export/datasets/BA85C835-F36E-446D-A527-7B41A9E18407
+      - s=https://dbpedia.org/resource/Moscow
       - t=8
 
     volumes:
@@ -21,9 +21,9 @@ services:
     ports:
       - "8080:8080"
 
-  virtuosohost:
+  ldsvirtuosohost:
     image: openlink/virtuoso-opensource-7:latest
-    container_name: virtuosohost
+    container_name: ldsvirtuosohost
     ports:
       - "8890:8890"
     volumes:
