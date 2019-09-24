@@ -1038,7 +1038,9 @@ public class Main {
         @Override
         public void quad(Quad quad) {
             sink.addTriple(curi, quad.asTriple());
-//            LOGGER.info("triple found: " + quad.asTriple().toString());
+            _log.info("Quad found: " + quad.toString());
+            _log.info("Triple Converted: " + quad.asTriple().toString());
+
         }
 
     }
