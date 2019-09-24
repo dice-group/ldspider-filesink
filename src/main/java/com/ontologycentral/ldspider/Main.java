@@ -105,6 +105,9 @@ public class Main {
         
 
         Map<String, String> mapEnv = System.getenv();
+        
+        _log.info("Environment Variables: ");
+        _log.info(mapEnv.toString());
 
         List<String> argsList = new ArrayList<String>();
 
@@ -383,6 +386,7 @@ public class Main {
                     cmd.getOptionValue("passwd_sparql"));
             
             sink.deleteTriples();
+            
 
 
             run(cmd);
@@ -1032,6 +1036,7 @@ public class Main {
         @Override
         public void triple(Triple triple) {
             sink.addTriple(curi, triple);
+            _log.info("Storing triple: " + triple);
 //            LOGGER.info("triple found: " + triple.toString());
         }
 
@@ -1040,6 +1045,7 @@ public class Main {
             sink.addTriple(curi, quad.asTriple());
             _log.info("Quad found: " + quad.toString());
             _log.info("Triple Converted: " + quad.asTriple().toString());
+
 
         }
 
