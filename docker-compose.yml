@@ -10,7 +10,8 @@ services:
       - o=tempFile
       - user_sparql=dba
       - passwd_sparql=123pwd
-      - b=1
+      #- b=1
+      - c=2
       - s=https://dbpedia.org/resource/Moscow
       - t=8
 
