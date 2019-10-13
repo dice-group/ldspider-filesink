@@ -6,7 +6,6 @@ import java.util.Set;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 
-import com.ontologycentral.ldspider.hooks.content.ContentHandlerRdfXml;
 import com.ontologycentral.ldspider.hooks.sink.TakingHopsIntoAccount;
 import com.ontologycentral.ldspider.queue.DiskBreadthFirstQueue.CountLifeTime;
 
@@ -30,7 +29,7 @@ public class CrawlerConstants {
 
 	public static String[] SUFFIX_BLACKLIST = { ".fr", ".de" };
 	
-	public static String[] BLACKLIST = { ".txt", ".html", ".xhtml", ".json", ".ttl", ".nt", ".jpg", ".pdf", ".htm", ".png", ".jpeg", ".gif" };
+	public static String[] BLACKLIST = { ".txt", ".html", ".xhtml", ".json", ".jpg", ".pdf", ".htm", ".png", ".jpeg", ".gif" };
 	
 	public static String[] SITES_NO_RDF = { "wikipedia.org", "wikimedia.org", "slideshare.net", "imdb.com", "twimg.com", "dblp.uni-trier.de", "flickr.com", "amazon.com", "last.fm" };
 	//public static String[] SITES_NO_RDF;

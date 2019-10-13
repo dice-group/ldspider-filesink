@@ -684,6 +684,7 @@ public class Main {
 					bListFromCli[i] = "." + bListFromCli[i];
 			blacklist = new FetchFilterSuffix(bListFromCli);
 		} else
+//			blacklist = new FetchFilterSuffix(CrawlerConstants.BLACKLIST);
 			blacklist = new FetchFilterSuffix(CrawlerConstants.BLACKLIST);
 
 		_log.info("init crawler");
