@@ -1,3 +1,5 @@
+**This repository is a fork of [LDSpider](https://github.com/ldspider/ldspider).** It is only used for necessary adaptations of the crawler to make it work with the [ORCA benchmark](https://github.com/dice-group/orca).
+
 ## Introduction ##
 
 The **LDSpider** project provides a web crawling framework for the Linked Data web.

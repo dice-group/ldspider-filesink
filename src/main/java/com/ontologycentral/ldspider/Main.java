@@ -142,6 +142,10 @@ public class Main {
 			argsList.add("-c");
 			argsList.add(mapEnv.get("c"));
 		}
+        
+        if (mapEnv.containsKey("dbfq")) {
+            argsList.add("-dbfq");
+        }
 
 		argsList.add("-o");
 		argsList.add(mapEnv.get("o"));
@@ -151,6 +155,11 @@ public class Main {
 
 		argsList.add("-passwd_sparql");
 		argsList.add(mapEnv.get("passwd_sparql"));
+        
+        if (mapEnv.get("polite") != null && !mapEnv.get("polite").isEmpty()) {
+            argsList.add("--polite");
+            argsList.add(mapEnv.get("polite"));
+        }
 
 		// Option uri = OptionBuilder.withArgName("uri")
 		// .hasArgs(1)
