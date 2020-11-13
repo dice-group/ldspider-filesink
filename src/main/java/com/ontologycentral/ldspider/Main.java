@@ -145,6 +145,7 @@ public class Main {
         
         if (mapEnv.containsKey("dbfq")) {
             argsList.add("-dbfq");
+            argsList.add("-sdf");
         }
 
 		argsList.add("-o");
@@ -160,6 +161,10 @@ public class Main {
             argsList.add("--polite");
             argsList.add(mapEnv.get("polite"));
         }
+        
+        // Print command line parameters
+        System.out.print("Command line arguments: ");
+        System.out.println(argsList.toString());
 
 		// Option uri = OptionBuilder.withArgName("uri")
 		// .hasArgs(1)
